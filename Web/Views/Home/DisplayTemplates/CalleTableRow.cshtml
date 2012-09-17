@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Core.Models.Calle>
+
+@foreach (Core.Models.Calle calle in Model) {
+    if (calle.Alturas)
+    {
+        foreach (Core.Models.Zona zona in calle.zonas)
+        {
+<tr>
+	@if (zona == calle.zonas[0])
+ {
+		<td rowspan="@calle.zonas.Count">@calle.nombre</td>
+ }
+  	<td>@zona.desde</td>
+  	<td>@zona.hasta</td>
+  	@{	switch (zona.vereda)
+        {
+            case 1:
+	  			<text>
+	  			<td>Par</td>
+	  			<td><span class="badge badge-success">@zona.zona</span></td>
+	  			</text>
+                                       break;
+            case 2:
+	  			<text>
+	  			<td>Impar</td>
+	  			<td><span class="badge badge-info">@zona.zona</span></td>
+	  			</text>
+                                    break;
+            case 3:
+	  			<text>
+	  			<td>Ambas</td>
+	  			<td><span class="badge badge-inverse">@zona.zona</span></td>
+	  			</text>
+                                       break;
+        }
+  	}
+</tr>
+        }
+    }
+    else if (calle.zonas.Count != 0)
+    { 
+        <tr>
+            <td>@calle.nombre</td>
+	        <td colspan="3">Todas las alturas</td>
+  	        <td><span class="badge badge-important">@calle.Zona</span></td>
+        </tr>
+    }
+}

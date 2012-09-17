@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Core.Models.Calle>
+
+@{
+    ViewBag.Title = "Calles";
+}
+
+@section QuickSearch {
+    <form method="get" class="navbar-search pull-left">
+      <input name="quickFilter" type="text" class="search-query" placeholder="Nombre de calle" value="@ViewBag.QuickFilter">
+    </form>
+}
+
+<h1>Calles</h1>
+
+<table class="table table-bordered">
+	<thead>
+	<tr>
+		<th>Nombre</th>
+		<th>&nbsp;</th>
+	</tr>
+	</thead>
+	<tbody>
+		@Html.DisplayForModel("CalleTableRow")
+	</tbody>
+</table>
+
+@Html.Partial("_paginator")

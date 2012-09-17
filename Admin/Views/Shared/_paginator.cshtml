@@ -1,0 +1,51 @@
+﻿<div class="pagination">
+  <ul>
+    @if (@Model.IsFirstPage)
+    {
+        <li class="disabled"><a href="#">«</a></li>
+    }
+    else { 
+        <li><a href="@Model.PreviousPageUrl()">«</a></li>
+    }
+       @if (@Model.PageCount > 10)
+       {
+           int currentIndex = @Model.PageIndex - 5;
+           currentIndex = (currentIndex < 0) ? 0 : currentIndex;
+           for (var index = currentIndex; index < Model.PageIndex + 6; index++)
+           {
+               int pageNumber = index + 1;
+               if (@Model.PageNumber == @pageNumber)
+               {
+                    <li class="disabled"><a href="#">@pageNumber</a></li>
+               }
+               else
+               { 
+                    <li><a href="@Model.PageUrl(@index)">@pageNumber</a></li>
+               }
+           }
+       }
+       else
+       {
+           for (var index = 0; index < @Model.PageCount; index++)
+           {
+               int pageNumber = index + 1;
+               if (@Model.PageNumber == @pageNumber)
+               {
+                <li class="disabled"><a href="#">@pageNumber</a></li>
+               }
+               else
+               { 
+                <li><a href="@Model.PageUrl(@index)">@pageNumber</a></li>
+               }
+           }
+       }
+    @if (@Model.IsLastPage)
+    {
+        <li class="disabled"><a href="#">»</a></li>
+    }
+    else
+    { 
+        <li><a href="@Model.NextPageUrl()">»</a></li>
+    }
+  </ul>
+</div>

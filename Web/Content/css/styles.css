@@ -1,0 +1,101 @@
+/* Overwrite defaults */
+
+body {
+    background-color: #2A313A;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin: 0;
+}
+
+/* Maquetando */
+.content {
+	margin: auto;
+	width: 60%;
+    padding-top: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    background-color: #FFFFFF;
+    padding: 10px;
+}
+
+.item-stream {
+    background-color: #F5F5F5;
+    border: 1px solid #D8D8D8;
+    border-radius: 6px 6px 6px 6px;
+}
+.search-input-stream {
+    margin-bottom: 0;
+}
+
+.stream-item, .ui-menu-item {
+    background-color: #F5F5F5;
+    padding: 6px;
+    position: relative;
+}
+
+/* pump-up */
+
+.pump-up {
+    color: #333333;
+    font-weight: bold;
+    line-height: 40px;
+    margin: 40px 22px 35px;
+    text-align: center;
+}
+
+.pump-up strong {
+    color: #777777;
+    font-weight: 300;
+}
+
+/* full-search-bar */
+
+.full-search-bar {
+	margin: 0 auto 10px;
+    position: relative;
+    width: 72%;
+}
+
+.full-search-bar .search-input-item {
+    border-radius: 9px 9px 9px 9px;
+    padding: 10px;
+}
+
+.full-search-bar div {
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+}
+
+.full-search-bar div button[type="submit"] {
+    height: 46px;
+    border-radius: 0 6px 6px 0;
+    height: 41px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 46px;
+}
+
+.full-search-bar div input[type="text"] {
+    height: 35px;
+    border-radius: 6px 0 0 6px;
+    border-right: 0 none;
+    float: left;
+    font-size: 20px;
+    height: 30px;
+    line-height: 24px;
+    margin-bottom: 0;
+    width: 95%;
+}
+
+#search-status {
+	display: none;
+	text-align: center;
+	padding: 30px;
+}
+
+#search-result {
+	text-align: center;
+}

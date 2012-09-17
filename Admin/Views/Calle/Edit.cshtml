@@ -1,0 +1,32 @@
+﻿@model Core.Models.Calle
+
+@{
+    ViewBag.Title = "Editar";
+}
+
+<h1>@Model.nombre</h1>
+
+<div id="NombreEditor" style="display: none;">
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.id);
+    @Html.EditorForModel()
+    <input type="submit" class="btn" value="Editar" />
+}
+</div>
+
+<h2>Zonas</h2>
+
+@Html.Partial("CalleZonas", Model)
+
+<button id="buttonNuevaZona" class="btn" @if (Model.zonas.Count != 0 && !Model.Alturas){ <text>disabled="disabled"</text> }>Nueva <i class="icon-plus-sign"></i></button>
+
+@section Scripts {
+    var config = {
+        jsonUrl: "@Url.Action("JsonZona", "Calle", new { id = Model.id })",
+        deleteUrl: "@Url.Action("DeleteZona", "Calle", new { id = Model.id })",
+        editUrl: "@Url.Action("EditZona", "Calle", new { id = Model.id })",
+        dataUrl: "@Url.Action("Zonas", "Calle", new { id = Model.id })",
+    };
+    zonaEditor = new ZonaEditor(config);
+}

@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Core.Models.Calle>
+
+@{
+    ViewBag.Title = "Calles";
+}
+
+<table class="table table-bordered">
+	<thead>
+	<tr>
+		<th>Calle</th>
+		<th>Desde</th>
+		<th>Hasta</th>
+		<th>Vereda</th>
+		<th>Zona</th>
+	</tr>
+	</thead>
+	<tbody>
+		@Html.DisplayForModel("CalleTableRow")
+	</tbody>
+</table>

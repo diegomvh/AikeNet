@@ -1,0 +1,12 @@
+﻿@model Admin.Tools.Paginator<Core.Models.Calle>
+
+@foreach (Core.Models.Calle calle in Model)
+{
+<tr>
+	<td>@calle.nombre</td>
+    <td>
+        <a href="@Url.Action("Edit", "Calle",  new { id = calle.id })"><i class="icon-edit"></i></a>
+        <a href="@Url.Action("Delete", "Calle", new { id = calle.id })"><i class="icon-remove"></i></a>
+    </td>
+</tr>
+}

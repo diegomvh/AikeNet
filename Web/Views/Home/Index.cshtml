@@ -1,0 +1,42 @@
+﻿@{  
+    ViewBag.Title = "Buscador de zonas";
+}
+<div class="full-search-bar">
+	<h1 class="pump-up">Buscador de zonas.<br> <strong>Ingrese una calle.</strong></h1>
+	<ul id="calles-buscador" class="item-stream unstyled search-input-stream">
+		<li class="stream-item stream-header search-input-item">
+		<div class="form-inline search-form">
+			<input type="text" value="" autocomplete="off" placeholder="Avenida Siempreviva 723" name="query" id="calle_search" class="xlarge ui-autocomplete-input" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+			<button type="submit" id="buscar-submit" class="btn btn-large btn-inverse"><i class="icon-search icon-white"></i></button>
+		</div>		
+		</li>
+	</ul>
+</div>
+
+<div id="search-status">
+	<img src="@Url.Content("~/Content/img/circle_loader.gif")">
+</div>
+
+<div id="search-result"></div>
+
+@section Scripts {
+	var buscarCalles = function() {
+		$("#search-status").fadeIn(100);
+		$.get(
+			'@Url.Action("BuscarCalle")',
+			{ query: $("#calle_search").val()},
+            function (response) {
+            	$(".pump-up").fadeOut(100);
+            	$("#search-status").hide();
+                $("#search-result").html($(response).fadeIn(500));
+            }
+		);
+	}
+	$("#buscar-submit").live("click", buscarCalles);
+	$("#calle_search").keypress(function(event) {
+  		if ( event.which == 13 ) {
+     		event.preventDefault();
+     		buscarCalles();
+   		}
+	});
+}
