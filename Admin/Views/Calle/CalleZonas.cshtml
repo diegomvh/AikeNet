@@ -10,59 +10,9 @@
         <th>&nbsp;</th>
 	</tr>
 	</thead>
-	<tbody id="CalleZonasRows">
+	<tbody>
         @Html.Partial("ZonaTableRow", Model)
 	</tbody>
 </table>
 
-<div class="modal hide fade" id="ZonaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Editar Zona</h3>
-  </div>
-  <div class="modal-body">
-    <form id="ZonaForm" class="form-horizontal">
-        <input id="inputZID" type="hidden" name="zId" />
-        <div class="control-group">
-            <div class="controls">
-            <label class="checkbox">
-                <input id="inputAlturas" name="alturas" type="checkbox">Todas las alturas</label>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputDesde">Desde</label>
-            <div class="controls">
-                <input id="inputDesde" type="text" name="desde" placeholder="Desde" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputHasta">Hasta</label>
-            <div class="controls">
-                <input id="inputHasta" type="text" name="hasta" placeholder="Hasta" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputVereda">Vereda</label>
-            <div class="controls">
-                <select id="inputVereda" name="vereda" placeholder="Vereda">
-                    <option value="1">Par</option>
-                    <option value="2">Impar</option>
-                    <option value="3">Ambas</option>
-                </select>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputZona">Zona</label>
-            <div class="controls">
-                <input id="inputZona" type="text" name="zona" placeholder="Zona" />
-            </div>
-        </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-    <button id="buttonGuardarZona" class="btn btn-primary">Guardar</button>
-  </div>
-</div>
-
-
+<button id="buttonNuevaZona" class="btn" @if (Model.zonas.Count != 0 && !Model.Alturas){ <text>disabled="disabled"</text> }>Nueva <i class="icon-plus-sign"></i></button>

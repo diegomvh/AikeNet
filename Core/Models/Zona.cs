@@ -31,17 +31,25 @@ namespace Core.Models
             };
         }
 
-        public void LimpiarAlturas() {
-            this.hasta = this.desde = 0;
-            this.vereda = 3;
+        public void Update(NameValueCollection data, bool todasLasAlturas) {
+            if (todasLasAlturas)
+            {
+                this.desde = this.hasta = 0;
+                this.zona = int.Parse(data["zona"]);
+                this.vereda = Zona.AMBAS;
+            }
+            else
+            {
+                this.desde = int.Parse(data["desde"]);
+                this.hasta = int.Parse(data["hasta"]);
+                this.zona = int.Parse(data["zona"]);
+                this.vereda = int.Parse(data["vereda"]);
+            }
         }
 
-        public void Update(NameValueCollection data) {
-            // TODO: Reflection
-            this.desde = int.Parse(data["desde"]);
-            this.hasta = int.Parse(data["hasta"]);
-            this.zona = int.Parse(data["zona"]);
-            this.vereda = int.Parse(data["vereda"]);
+        public void Update(NameValueCollection data)
+        {
+            this.Update(data, (data["desde"] == "0" && data["hasta"] == "0"));
         }
 
 		public override string ToString ()

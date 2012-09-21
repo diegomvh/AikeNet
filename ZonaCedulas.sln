@@ -33,7 +33,7 @@ Global
 		{E13CCB27-BD08-4C96-B9AC-E16ABC3E9FB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Web\Web.csproj
+		StartupItem = Admin\Admin.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

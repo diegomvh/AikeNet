@@ -5,10 +5,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Core.Models
 {
-    public class CalleSegmentada : Exception { }
-
 	[BsonIgnoreExtraElements]
-	public class Calle {
+	public class Calle : IValidatableObject {
 		[ScaffoldColumn(false)]
         [BsonId]
 	    public MongoDB.Bson.ObjectId id { get; set; }
@@ -21,6 +19,13 @@ namespace Core.Models
 
 	 	[ScaffoldColumn(false)]
 	    public IList<Zona> zonas { get; set; }
+
+        [ScaffoldColumn(false)]
+        public string idString {
+            get {
+                return this.id.ToString();
+            }
+        }
 
         [ScaffoldColumn(false)]
         public bool Segmentada {
@@ -47,9 +52,9 @@ namespace Core.Models
         [ScaffoldColumn(false)]
         public int Zona {
             get {
-                if (this.Segmentada)
-                    throw new CalleSegmentada();
-                return this.zonas[0].zona;
+				if (this.zonas.Count > 0)
+                	return this.zonas[0].zona;
+				return 0;
             }
         }
 
@@ -61,5 +66,15 @@ namespace Core.Models
             }
             return null;
         }
+
+		public System.Collections.Generic.IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+			/* if (this.vereda == Zona.PAR && ((this.desde % 2) != 0 || (this.hasta % 2) != 0))
+				yield return new ValidationResult("Para veredas pares las alturas deben ser números pares", new [] { "Vereda" });
+			else if (this.vereda == Zona.IMPAR && ((this.desde % 2) != 1 || (this.hasta % 2) != 1))
+				yield return new ValidationResult("Para veredas impares las alturas deben ser números impares", new[] { "Vereda" });
+				*/
+			return new List<ValidationResult>();
+		}
 	}
 }

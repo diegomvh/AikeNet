@@ -17,15 +17,17 @@
 
 <h2>Zonas</h2>
 
+<div id="CalleZonasRows">
 @Html.Partial("CalleZonas", Model)
+</div>
 
-<button id="buttonNuevaZona" class="btn" @if (Model.zonas.Count != 0 && !Model.Alturas){ <text>disabled="disabled"</text> }>Nueva <i class="icon-plus-sign"></i></button>
+@Html.Partial("ZonaForm")
 
 @section Scripts {
     var config = {
         jsonUrl: "@Url.Action("JsonZona", "Calle", new { id = Model.id })",
         deleteUrl: "@Url.Action("DeleteZona", "Calle", new { id = Model.id })",
-        editUrl: "@Url.Action("EditZona", "Calle", new { id = Model.id })",
+        editUrl: "@Url.Action("CreateEditZona", "Calle", new { id = Model.id })",
         dataUrl: "@Url.Action("Zonas", "Calle", new { id = Model.id })",
     };
     zonaEditor = new ZonaEditor(config);

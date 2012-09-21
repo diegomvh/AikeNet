@@ -36,5 +36,22 @@ namespace Admin
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
         }
+        
+        protected void Application_AuthenticateRequest(Object sender, EventArgs e)
+        {
+            var cookieName = System.Web.Security.FormsAuthentication.FormsCookieName;
+            var authCookie = this.Context.Request.Cookies[cookieName];
+            if (authCookie != null) {
+                var authTicket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
+                if (authTicket != null) {
+                    var groups = authTicket.UserData.Split('|');
+                    var id = new System.Security.Principal.GenericIdentity(authTicket.Name, "LdapAuthentication");
+                    var principal = new System.Security.Principal.GenericPrincipal(id, groups);
+                    this.Context.User = principal;
+                }
+            }
+
+        }
+
     }
 }

@@ -12,7 +12,9 @@
 
 <h1>Calles</h1>
 
-<table class="table table-bordered">
+<button id="buttonNuevaCalle" class="btn" >Nueva <i class="icon-plus-sign"></i></button>
+
+<table class="table table-bordered table-calles">
 	<thead>
 	<tr>
 		<th>Nombre</th>
@@ -25,3 +27,12 @@
 </table>
 
 @Html.Partial("_paginator")
+
+@Html.Partial("CalleForm")
+
+@section Scripts {
+    var config = {
+        createUrl: "@Url.Action("CreateEdit", "Calle")",
+    };
+    calleEditor = new CalleEditor(config);
+}

@@ -19,16 +19,18 @@ namespace Core.Services
 			this._calles = new MongoHelper<Calle>("calles");
 		}
 
-        public void Create(Calle calle)
+        public Calle Create()
         {
+			var calle = new Calle();
             calle.zonas = new List<Zona>();
-            this._calles.Collection.Save(calle);
+			calle.id = ObjectId.GenerateNewId();
+			return calle;
         }
 
-        public void Edit(Calle calle)
-        {
-            this._calles.Collection.Save(calle);
-        }
+		public void Save(Calle calle)
+		{
+			this._calles.Collection.Save(calle);
+		}
 
         public void Delete(string sid)
         {
