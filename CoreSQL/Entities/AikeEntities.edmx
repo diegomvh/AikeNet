@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CoreSQL.Entities.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="CoreSQLEntitiesStoreContainer">
+          <EntitySet Name="zonas_altura" EntityType="CoreSQL.Entities.Store.zonas_altura" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="zonas_calle" EntityType="CoreSQL.Entities.Store.zonas_calle" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="zonas_localidad" EntityType="CoreSQL.Entities.Store.zonas_localidad" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_zonas_altura_zonas_calle" Association="CoreSQL.Entities.Store.FK_zonas_altura_zonas_calle">
+            <End Role="zonas_calle" EntitySet="zonas_calle" />
+            <End Role="zonas_altura" EntitySet="zonas_altura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_zonas_calle_zonas_localidad" Association="CoreSQL.Entities.Store.FK_zonas_calle_zonas_localidad">
+            <End Role="zonas_localidad" EntitySet="zonas_localidad" />
+            <End Role="zonas_calle" EntitySet="zonas_calle" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="zonas_altura">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="calle_id" Type="int" Nullable="false" />
+          <Property Name="desde" Type="int" Nullable="false" />
+          <Property Name="hasta" Type="int" Nullable="false" />
+          <Property Name="vereda" Type="smallint" Nullable="false" />
+          <Property Name="zona" Type="smallint" />
+          <Property Name="barrio" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="zonas_calle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="nombres" Type="nvarchar" Nullable="false" />
+          <Property Name="localidad_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="zonas_localidad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_zonas_altura_zonas_calle">
+          <End Role="zonas_calle" Type="CoreSQL.Entities.Store.zonas_calle" Multiplicity="1" />
+          <End Role="zonas_altura" Type="CoreSQL.Entities.Store.zonas_altura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="zonas_calle">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zonas_altura">
+              <PropertyRef Name="calle_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_zonas_calle_zonas_localidad">
+          <End Role="zonas_localidad" Type="CoreSQL.Entities.Store.zonas_localidad" Multiplicity="1" />
+          <End Role="zonas_calle" Type="CoreSQL.Entities.Store.zonas_calle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="zonas_localidad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zonas_calle">
+              <PropertyRef Name="localidad_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetAlturasByProximidad" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AlturaDesdeNumero" Type="int" Mode="In" />
+          <Parameter Name="AlturaHastaNumero" Type="int" Mode="In" />
+          <Parameter Name="CalleNombre" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetAlturasByRango" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AlturaNumero" Type="int" Mode="In" />
+          <Parameter Name="CalleNombre" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetCallesByNombre" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CalleNombre" Type="varchar" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CoreSQL.Entities" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="AikeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="zonas_altura" EntityType="CoreSQL.Entities.Altura" />
+          <EntitySet Name="zonas_calle" EntityType="CoreSQL.Entities.Calle" />
+          <EntitySet Name="zonas_localidad" EntityType="CoreSQL.Entities.Localidad" />
+          <AssociationSet Name="FK_zonas_altura_zonas_calle" Association="CoreSQL.Entities.FK_zonas_altura_zonas_calle">
+            <End Role="zonas_calle" EntitySet="zonas_calle" />
+            <End Role="zonas_altura" EntitySet="zonas_altura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_zonas_calle_zonas_localidad" Association="CoreSQL.Entities.FK_zonas_calle_zonas_localidad">
+            <End Role="zonas_localidad" EntitySet="zonas_localidad" />
+            <End Role="zonas_calle" EntitySet="zonas_calle" />
+          </AssociationSet>
+          <FunctionImport Name="GetAlturasByProximidad" ReturnType="Collection(CoreSQL.Entities.AlturasCalle)">
+            <Parameter Name="AlturaDesdeNumero" Mode="In" Type="Int32" />
+            <Parameter Name="AlturaHastaNumero" Mode="In" Type="Int32" />
+            <Parameter Name="CalleNombre" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetAlturasByRango" ReturnType="Collection(CoreSQL.Entities.AlturasCalle)">
+            <Parameter Name="AlturaNumero" Mode="In" Type="Int32" />
+            <Parameter Name="CalleNombre" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetCallesByNombre" EntitySet="zonas_calle" ReturnType="Collection(CoreSQL.Entities.Calle)">
+          <Parameter Name="CalleNombre" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Altura">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="calle_id" Type="Int32" Nullable="false" />
+          <Property Name="desde" Type="Int32" Nullable="false" />
+          <Property Name="hasta" Type="Int32" Nullable="false" />
+          <Property Name="vereda" Type="Int16" Nullable="false" />
+          <Property Name="zona" Type="Int16" />
+          <Property Name="barrio" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Calle">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <Property Name="nombres" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+          <Property Name="localidad_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="altura_set" Relationship="CoreSQL.Entities.FK_zonas_altura_zonas_calle" FromRole="zonas_calle" ToRole="zonas_altura" />
+          <NavigationProperty Name="localidad_set" Relationship="CoreSQL.Entities.FK_zonas_calle_zonas_localidad" FromRole="zonas_calle" ToRole="zonas_localidad" />
+        </EntityType>
+        <EntityType Name="Localidad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="calle_set" Relationship="CoreSQL.Entities.FK_zonas_calle_zonas_localidad" FromRole="zonas_localidad" ToRole="zonas_calle" />
+        </EntityType>
+        <Association Name="FK_zonas_altura_zonas_calle">
+          <End Role="zonas_calle" Type="CoreSQL.Entities.Calle" Multiplicity="1" />
+          <End Role="zonas_altura" Type="CoreSQL.Entities.Altura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="zonas_calle">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zonas_altura">
+              <PropertyRef Name="calle_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_zonas_calle_zonas_localidad">
+          <End Role="zonas_localidad" Type="CoreSQL.Entities.Localidad" Multiplicity="1" />
+          <End Role="zonas_calle" Type="CoreSQL.Entities.Calle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="zonas_localidad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="zonas_calle">
+              <PropertyRef Name="localidad_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="AlturasCalle">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Int32" Name="calle_id" Nullable="false" />
+          <Property Type="String" Name="calle_nombre" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="desde" Nullable="false" />
+          <Property Type="Int32" Name="hasta" Nullable="false" />
+          <Property Type="Int16" Name="vereda" Nullable="false" />
+          <Property Type="Int16" Name="zona" Nullable="true" />
+          <Property Type="String" Name="barrio" Nullable="false" MaxLength="100" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CoreSQLEntitiesStoreContainer" CdmEntityContainer="AikeEntities">
+          <EntitySetMapping Name="zonas_altura"><EntityTypeMapping TypeName="CoreSQL.Entities.Altura"><MappingFragment StoreEntitySet="zonas_altura">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="calle_id" ColumnName="calle_id" />
+            <ScalarProperty Name="desde" ColumnName="desde" />
+            <ScalarProperty Name="hasta" ColumnName="hasta" />
+            <ScalarProperty Name="vereda" ColumnName="vereda" />
+            <ScalarProperty Name="zona" ColumnName="zona" />
+            <ScalarProperty Name="barrio" ColumnName="barrio" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="zonas_calle"><EntityTypeMapping TypeName="CoreSQL.Entities.Calle"><MappingFragment StoreEntitySet="zonas_calle">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="nombre" ColumnName="nombre" />
+            <ScalarProperty Name="nombres" ColumnName="nombres" />
+            <ScalarProperty Name="localidad_id" ColumnName="localidad_id" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="zonas_localidad"><EntityTypeMapping TypeName="CoreSQL.Entities.Localidad"><MappingFragment StoreEntitySet="zonas_localidad">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="nombre" ColumnName="nombre" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetAlturasByProximidad" FunctionName="CoreSQL.Entities.Store.GetAlturasByProximidad" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CoreSQL.Entities.AlturasCalle">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="calle_id" ColumnName="calle_id" />
+                <ScalarProperty Name="calle_nombre" ColumnName="calle_nombre" />
+                <ScalarProperty Name="desde" ColumnName="desde" />
+                <ScalarProperty Name="hasta" ColumnName="hasta" />
+                <ScalarProperty Name="vereda" ColumnName="vereda" />
+                <ScalarProperty Name="zona" ColumnName="zona" />
+                <ScalarProperty Name="barrio" ColumnName="barrio" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAlturasByRango" FunctionName="CoreSQL.Entities.Store.GetAlturasByRango" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CoreSQL.Entities.AlturasCalle">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="calle_id" ColumnName="calle_id" />
+                <ScalarProperty Name="calle_nombre" ColumnName="calle_nombre" />
+                <ScalarProperty Name="desde" ColumnName="desde" />
+                <ScalarProperty Name="hasta" ColumnName="hasta" />
+                <ScalarProperty Name="vereda" ColumnName="vereda" />
+                <ScalarProperty Name="zona" ColumnName="zona" />
+                <ScalarProperty Name="barrio" ColumnName="barrio" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetCallesByNombre" FunctionName="CoreSQL.Entities.Store.GetCallesByNombre" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="AikeEntities">
+        <EntityTypeShape EntityType="CoreSQL.Entities.Altura" Width="1.5" PointX="5.25" PointY="0.875" Height="2.1053483072916666" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoreSQL.Entities.Calle" Width="1.5" PointX="3" PointY="1.125" Height="1.9210009765624996" IsExpanded="true" />
+        <EntityTypeShape EntityType="CoreSQL.Entities.Localidad" Width="1.5" PointX="0.75" PointY="1.375" Height="1.4279589843749996" IsExpanded="true" />
+        <AssociationConnector Association="CoreSQL.Entities.FK_zonas_altura_zonas_calle" ManuallyRouted="false">
+          <ConnectorPoint PointX="4.5" PointY="2.0526741536458335" />
+          <ConnectorPoint PointX="5.25" PointY="2.0526741536458335" />
+        </AssociationConnector>
+        <AssociationConnector Association="CoreSQL.Entities.FK_zonas_calle_zonas_localidad" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="2.0889794921875" />
+          <ConnectorPoint PointX="3" PointY="2.0889794921875" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
