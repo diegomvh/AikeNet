@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Core.Models;
-using Core.Helpers;
+using CoreMongo.Models;
+using CoreMongo.Helpers;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
-namespace Core.Services
+namespace CoreMongo.Services
 {
     public class ZonaService
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Core.Models
+namespace CoreMongo.Models
 {
 	[BsonIgnoreExtraElements]
 	public class Calle : IValidatableObject {
@@ -15,7 +15,7 @@ namespace Core.Models
 	    public string nombre { get; set; }
 
 		[ScaffoldColumn(false)]
-	    public string[] nombres { get; set; }
+		public IList<string> nombres { get; set; }
 
 	 	[ScaffoldColumn(false)]
 	    public IList<Zona> zonas { get; set; }
@@ -35,6 +35,15 @@ namespace Core.Models
                 return false;
             }
         }
+
+		[ScaffoldColumn(false)]
+		public string DescripcionHtml {
+			get {
+				if (this.nombres != null && this.nombres.Count > 0)
+                    return this.nombre + "<p class='text-info'><small>" + string.Join(", ", this.nombres) + "</small></p>";
+				return this.nombre;
+			}
+		}
 
         [ScaffoldColumn(false)]
         public bool Alturas {
@@ -66,6 +75,22 @@ namespace Core.Models
             }
             return null;
         }
+
+		public void agregarNombreAlternativo(string nombre)
+		{
+			if (this.nombres == null)
+				this.nombres = new List<string>();
+			this.nombres.Add(nombre);
+		}
+
+		public void quitarNombreAlternativo(string nombre)
+		{
+			this.nombres.Remove(nombre);
+			if (this.nombres.Count == 0)
+				this.nombres = null;
+		}
+
+
 
 		public System.Collections.Generic.IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{

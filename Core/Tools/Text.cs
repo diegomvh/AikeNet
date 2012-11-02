@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Core.Tools
+namespace CoreMongo.Tools
 {
 	public class Text
 	{

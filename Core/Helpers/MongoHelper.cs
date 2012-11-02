@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using MongoDB.Driver;
 
-namespace Core.Helpers
+namespace CoreMongo.Helpers
 {
     public class MongoHelper<T> where T : class
     {

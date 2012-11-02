@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Core.Models
+namespace CoreMongo.Models
 {
     public class Zona : IValidatableObject {
 

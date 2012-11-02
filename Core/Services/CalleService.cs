@@ -1,13 +1,13 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using Core.Models;
-using Core.Helpers;
+using CoreMongo.Models;
+using CoreMongo.Helpers;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
-namespace Core.Services
+namespace CoreMongo.Services
 {
 	public class CalleService
 	{
@@ -75,10 +75,11 @@ namespace Core.Services
 				this.GetCalles(String.Join(" ", nombres));
 
 			if (altura != -1) {
-				var calles = new List<Core.Models.Calle>();
-				foreach (Core.Models.Calle calle in cc) {
-					var zonas = new List<Core.Models.Zona>();
-					foreach (Core.Models.Zona zona in calle.zonas)
+                var calles = new List<CoreMongo.Models.Calle>();
+                foreach (CoreMongo.Models.Calle calle in cc)
+                {
+                    var zonas = new List<CoreMongo.Models.Zona>();
+                    foreach (CoreMongo.Models.Zona zona in calle.zonas)
 						if (zona.desde <= altura && 
 						    zona.hasta >= altura && 
 						    Convert.ToBoolean(zona.vereda & ((altura % 2 == 0) ? 1 : 2)))
@@ -94,7 +95,7 @@ namespace Core.Services
 
 		public IEnumerable<Calle> GetCalles(string nombre, int altura = 0)
         {
-			nombre = Core.Tools.Text.misspellRegexpSafeString(nombre);
+            nombre = CoreMongo.Tools.Text.misspellRegexpSafeString(nombre);
 			var query = Query.Matches("nombre", BsonRegularExpression.Create(nombre, "i"));
 			if (altura != 0)
 				query = Query.And(query,
