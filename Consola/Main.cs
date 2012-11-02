@@ -1,10 +1,13 @@
 using System;
 using System.Data.SqlClient;
+using System.Data.Objects;
+using System.Data.Objects.DataClasses;
+using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using System.Configuration;
-using Core;
+using CoreMongo;
 
 namespace Consola
 {
@@ -12,20 +15,34 @@ namespace Consola
 	{
 		public static void Main (string[] args)
 		{
-            var calleService = new Core.Services.CalleService();
-            foreach (Core.Models.Calle calle in calleService.BuscarCalles("martín"))
-			{
+            MainClass.TestCoreSQL();
+            System.Console.Read();
+		}
+
+        public static void TestCoreMongo() {
+            var calleService = new CoreMongo.Services.CalleService();
+            foreach (CoreMongo.Models.Calle calle in calleService.BuscarCalles("martín"))
+            {
                 //System.Console.WriteLine(calle.nombre);
-				foreach (Core.Models.Zona zona in calle.zonas) {
+                foreach (CoreMongo.Models.Zona zona in calle.zonas)
+                {
                     //System.Console.WriteLine(zona);
-				}
-			}
-            foreach (Core.Models.Calle calle in calleService.GetCalles(10, 4))
+                }
+            }
+            foreach (CoreMongo.Models.Calle calle in calleService.GetCalles(10, 4))
             {
                 System.Console.WriteLine(calle.nombre);
             }
-            System.Console.WriteLine(Core.Tools.Text.misspellRegexpSafeString("martín"));
-            System.Console.Read();
-		}
+            System.Console.WriteLine(CoreMongo.Tools.Text.misspellRegexpSafeString("martín"));
+        }
+
+        public static void TestCoreSQL()
+        {
+            var db = new CoreSQL.Entities.AikeEntities();
+            IQueryable<CoreSQL.Entities.Localidad> localidades = from l in db.zonas_localidad select l;
+            foreach (var localidad in localidades)
+                System.Console.WriteLine(localidad.nombre);
+
+        }
 	}
 }

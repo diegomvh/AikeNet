@@ -1,0 +1,24 @@
+﻿@model CoreSQL.Entities.Calle
+
+@if (Model.OtrosNombres().Count > 0)
+{
+    <table class="table table-bordered">
+	    <thead>
+	    <tr>
+		    <th>Nombre</th>
+		    <th>&nbsp;</th>
+	    </tr>
+	    </thead>
+	    <tbody>
+            @Html.Partial("NombreTableRow", Model)
+	    </tbody>
+    </table>
+}
+else
+{
+<tr>
+	<td colspan="5">No hay otros nombres</td>
+</tr>
+}
+
+<button id="buttonNuevoNombre" class="btn">Nuevo <i class="icon-plus-sign"></i></button>

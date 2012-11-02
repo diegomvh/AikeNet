@@ -4,22 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Core.Services;
+using CoreSQL.Services;
 using Admin.Extensions;
 using Admin.Tools;
+using Admin.Models;
 
 namespace Admin.Controllers
 {
-	[Authorize(Users="dvanhaaster")]
+	[Authorize(Roles="ggDptoDesarrollo")]
     public class CalleController : Controller
     {
         private readonly CalleService _calleService;
-        private readonly ZonaService _zonaService;
 
         public CalleController()
         {
             this._calleService = new CalleService();
-            this._zonaService = new ZonaService();
         }
 
         //
@@ -28,7 +27,7 @@ namespace Admin.Controllers
         public ActionResult Index(int pageIndex = 0, int pageSize = 10, string quickFilter = "")
         {
             var calles = (quickFilter == "") ? this._calleService.GetCalles() : this._calleService.BuscarCalles(quickFilter);
-            var Paginator = new Paginator<Core.Models.Calle>(calles, pageIndex, pageSize);
+            var Paginator = new Paginator<CoreSQL.Entities.Calle>(calles, pageIndex, pageSize);
             if (quickFilter != "")
                 Paginator.RouteQuery = new Dictionary<string, object>() {
                     {"quickFilter", quickFilter}
@@ -38,10 +37,12 @@ namespace Admin.Controllers
             return View("Index", Paginator);
         }
 
-		public ActionResult Edit(string id)
+		public ActionResult Edit(int id)
 		{
-			var calle = this._calleService.GetCalle(id);
-			return this.View("Edit", calle);
+            var model = new EditCalleModel();
+			model.Calle = this._calleService.GetCalle(id);
+            model.Alturas = this._calleService.GetAlturas(model.Calle);
+            return this.View("Edit", model);
 		}
 
         [HttpPost]
@@ -49,9 +50,12 @@ namespace Admin.Controllers
         {
             try
             {
-				var calle = (data["cId"] != null && data["cId"].Trim() != "")? this._calleService.GetCalle(data["cId"]) : this._calleService.Create();
+				var calle = (data["cId"] != null && data["cId"].Trim() != "")? this._calleService.GetCalle(int.Parse(data["cId"])) : this._calleService.Create();
 
-				calle.nombre = data["nombre"];
+                if (data["nombres"] != null)
+                    calle.agregarNombreAlternativo(data["nombres"]);
+                else if (data["nombre"] != null)
+                    calle.nombre = data["nombre"];
 				var errors = calle.Validate(new ValidationContext(calle, null, null));
 				foreach (var error in errors)
 					foreach (var memeber in error.MemberNames)
@@ -60,32 +64,54 @@ namespace Admin.Controllers
 				if (ModelState.IsValid) {
 					this._calleService.Save(calle);
 					return Json(new { Status = "ok",
-                                      Url = this.Url.Action("Edit", "Calle", new { id = calle.idString })
+                                      Url = this.Url.Action("Edit", "Calle", new { id = calle.id })
                     }, JsonRequestBehavior.AllowGet);
 				} else {
-					return Json(new { Status = "error", Errors = ModelState.Errors() }, JsonRequestBehavior.AllowGet);
+					return this.Json(new { Status = "error", Errors = ModelState.Errors() }, JsonRequestBehavior.AllowGet);
 				}
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }
         }
 	
-  		public ActionResult Delete(string id)
+  		public ActionResult Delete(int id)
         {
             this._calleService.Delete(id);
-            return this.Index();
+            return this.RedirectToAction("Index");
         }
 
+		[HttpPost]
+		public ActionResult AgregarNombre(int id, FormCollection data)
+		{
+			try
+			{
+				var calle = this._calleService.GetCalle(id);
+				calle.agregarNombreAlternativo(data["nombre"]);
+				if (ModelState.IsValid) {
+					this._calleService.Save(calle);
+					return this.Json(new { Status = "ok", }, JsonRequestBehavior.AllowGet);
+				} else {
+					return this.Json(new { Status = "error", Errors = ModelState.Errors() }, JsonRequestBehavior.AllowGet);
+				}
+			}
+			catch
+			{
+				return View();
+			}
+		}
+
         [HttpPost]
-        public ActionResult DeleteZona(string id, string zonaId)
+        public ActionResult DeleteZona(int id, int alturaId)
         {
             try
             {
-                this._zonaService.RemoveZona(id, zonaId);
-                var calle = this._calleService.GetCalle(id);
-                return PartialView("CalleZonas", calle);
+                this._calleService.EliminarAltura(id, alturaId);
+                var model = new Admin.Models.EditCalleModel();
+                model.Calle = this._calleService.GetCalle(id);
+                model.Alturas = this._calleService.GetAlturas(model.Calle);
+                return PartialView("CalleAlturas", model);
             }
             catch
             {
@@ -93,11 +119,11 @@ namespace Admin.Controllers
             }
         }
 
-        public ActionResult JsonZona(string id, string zonaId)
+        public ActionResult JsonAltura(int id, int alturaId)
         {
             try
             {
-                var zona = this._zonaService.GetZona(id, zonaId);
+                var zona = this._calleService.GetAltura(id, alturaId);
                 return Json(zona.ToJson(), JsonRequestBehavior.AllowGet);
             }
             catch
@@ -106,11 +132,13 @@ namespace Admin.Controllers
             }
         }
 
-        public ActionResult Zonas(string id) {
+        public ActionResult Zonas(int id) {
             try
             {
-                var calle = this._calleService.GetCalle(id);
-                return PartialView("CalleZonas", calle);
+                var model = new Admin.Models.EditCalleModel();
+                model.Calle = this._calleService.GetCalle(id);
+                model.Alturas = this._calleService.GetAlturas(model.Calle);
+                return PartialView("CalleAlturas", model);
             }
             catch
             {
@@ -119,29 +147,28 @@ namespace Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateEditZona(string id, FormCollection data)
+        public ActionResult CreateEditZona(int id, FormCollection data)
         {
             try
             {
                 var calle = this._calleService.GetCalle(id);
-                var zona = (data["zId"] != null && data["zId"].Trim() != "")? calle.BuscarZona(data["zId"]) : this._zonaService.Create(calle);
-                
-                var altura = data["alturas"];
-                zona.Update(data, (altura != null && altura != "false"));
-                
-                var errors = zona.Validate(new ValidationContext(zona, null, null));
+                var altura = (data["aId"] != null && data["aId"].Trim() != "") ? this._calleService.GetAltura(calle, int.Parse(data["aId"])) : this._calleService.CreateAltura(calle);
+
+                altura.Update(data, data["optionsAltura"]);
+
+                var errors = altura.Validate(new ValidationContext(altura, null, null));
                 foreach (var error in errors)
                     foreach (var memeber in error.MemberNames)
                         ModelState.AddModelError(memeber, error.ErrorMessage);
                 
                 if (ModelState.IsValid) {
-                    this._calleService.Save(calle);
+                    this._calleService.Save(altura);
                     return Json(new { Status = "ok", }, JsonRequestBehavior.AllowGet);
                 } else {
                     return Json(new { Status = "error", Errors = ModelState.Errors() }, JsonRequestBehavior.AllowGet);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }

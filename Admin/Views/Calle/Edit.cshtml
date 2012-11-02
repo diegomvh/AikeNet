@@ -1,34 +1,46 @@
-﻿@model Core.Models.Calle
+﻿@model Admin.Models.EditCalleModel
 
 @{
     ViewBag.Title = "Editar";
 }
 
-<h1>@Model.nombre</h1>
+<h1>@Model.Calle.nombre <a id="EditarNombre"><i class="icon-edit"></i></a></h1>
 
 <div id="NombreEditor" style="display: none;">
 @using (Html.BeginForm())
 {
-    @Html.HiddenFor(m => m.id);
+    @Html.HiddenFor(m => m.Calle.id);
     @Html.EditorForModel()
     <input type="submit" class="btn" value="Editar" />
 }
 </div>
 
-<h2>Zonas</h2>
+<h2>Nombres alternativos</h2>
 
-<div id="CalleZonasRows">
-@Html.Partial("CalleZonas", Model)
+<div id="CalleNombresRows">
+@Html.Partial("CalleNombres", Model.Calle)
 </div>
 
-@Html.Partial("ZonaForm")
+<h2>Alturas</h2>
+
+<div id="CalleZonasRows">
+@Html.Partial("CalleAlturas", Model)
+</div>
+
+@Html.Partial("AlturaForm")
+@Html.Partial("CalleForm")
 
 @section Scripts {
     var config = {
-        jsonUrl: "@Url.Action("JsonZona", "Calle", new { id = Model.id })",
-        deleteUrl: "@Url.Action("DeleteZona", "Calle", new { id = Model.id })",
-        editUrl: "@Url.Action("CreateEditZona", "Calle", new { id = Model.id })",
-        dataUrl: "@Url.Action("Zonas", "Calle", new { id = Model.id })",
+        jsonUrl: "@Url.Action("JsonAltura", "Calle", new { id = Model.Calle.id })",
+        deleteUrl: "@Url.Action("DeleteZona", "Calle", new { id = Model.Calle.id })",
+        editUrl: "@Url.Action("CreateEditZona", "Calle", new { id = Model.Calle.id })",
+        dataUrl: "@Url.Action("Zonas", "Calle", new { id = Model.Calle.id })",
     };
-    zonaEditor = new ZonaEditor(config);
+    alturaEditor = new AlturaEditor(config);
+    var config = {
+        nombre: "@Model.Calle.nombre",
+        editUrl: "@Url.Action("CreateEdit", "Calle", new { id = Model.Calle.id })",
+    };
+    calleEditor = new CalleEditor(config);
 }

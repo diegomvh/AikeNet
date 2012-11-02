@@ -28,7 +28,7 @@ namespace Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var repo = new Tools.UserRepository();
+                var repo = new Security.UserRepository();
                 var user = repo.Authenticate(model.UserName, model.Password);
                 if (user != null)
                 {

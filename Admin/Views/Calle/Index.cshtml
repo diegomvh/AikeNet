@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Core.Models.Calle>
+﻿@model IEnumerable<CoreSQL.Entities.Calle>
 
 @{
     ViewBag.Title = "Calles";
@@ -28,7 +28,7 @@
 
 @Html.Partial("_paginator")
 
-@Html.Partial("CalleForm")
+@Html.Partial("CalleForm", new Admin.Models.EditCalleModel())
 
 @section Scripts {
     var config = {

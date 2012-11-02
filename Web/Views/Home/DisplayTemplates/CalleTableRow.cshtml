@@ -1,48 +1,52 @@
-﻿@model IEnumerable<Core.Models.Calle>
+﻿@model IEnumerable<CoreSQL.Entities.AlturasCalle>
 
-@foreach (Core.Models.Calle calle in Model) {
-    if (calle.Alturas)
+@foreach (CoreSQL.Entities.AlturasCalle altura in Model)
+{
+    if (altura.desde != 0 && altura.desde == altura.hasta)
     {
-        foreach (Core.Models.Zona zona in calle.zonas)
-        {
-<tr>
-	@if (zona == calle.zonas[0])
- {
-		<td rowspan="@calle.zonas.Count">@calle.nombre</td>
- }
-  	<td>@zona.desde</td>
-  	<td>@zona.hasta</td>
-  	@{	switch (zona.vereda)
+        <tr>
+        <td>@Html.Raw(altura.calle_nombre)</td>
+        <td>@altura.desde</td>
+        <td colspan="2">Domicilio</td>
+        <td><span class="badge badge-success">@altura.zona</span></td>
+        </tr>
+    }
+    else if (altura.desde == 0 ) 
+    {
+        <tr>
+        <td>@Html.Raw(altura.calle_nombre)</td>
+        <td colspan="3">Todas las alturas</td>
+        <td><span class="badge badge-inverse">@altura.zona</span></td>
+        </tr>
+    } 
+    else 
+    {
+    <tr>
+ 	<td>@Html.Raw(altura.calle_nombre)</td>
+   	<td>@altura.desde</td>
+  	<td>@altura.hasta</td>
+  	@{	switch (altura.vereda)
         {
             case 1:
 	  			<text>
 	  			<td>Par</td>
-	  			<td><span class="badge badge-success">@zona.zona</span></td>
+	  			<td><span class="badge badge-success">@altura.zona</span></td>
 	  			</text>
                                        break;
             case 2:
 	  			<text>
 	  			<td>Impar</td>
-	  			<td><span class="badge badge-info">@zona.zona</span></td>
+	  			<td><span class="badge badge-info">@altura.zona</span></td>
 	  			</text>
                                     break;
             case 3:
 	  			<text>
 	  			<td>Ambas</td>
-	  			<td><span class="badge badge-inverse">@zona.zona</span></td>
+	  			<td><span class="badge badge-inverse">@altura.zona</span></td>
 	  			</text>
                                        break;
         }
   	}
-</tr>
-        }
-    }
-    else if (calle.zonas.Count != 0)
-    { 
-        <tr>
-            <td>@calle.nombre</td>
-	        <td colspan="3">Todas las alturas</td>
-  	        <td><span class="badge badge-important">@calle.Zona</span></td>
-        </tr>
-    }
+    </tr>
+}
 }

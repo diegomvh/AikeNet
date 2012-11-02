@@ -1,25 +1,81 @@
-﻿var Cedulas = {}
+﻿jQuery.fn.serializeObject = function () {
+    var arrayData, objectData;
+    arrayData = this.serializeArray();
+    objectData = {};
+    console.log(arrayData);
+    $.each(arrayData, function () {
+        var value;
+
+        if (this.value != null) {
+            value = this.value;
+        } else {
+            value = '';
+        }
+
+        if (objectData[this.name] != null) {
+            if (!objectData[this.name].push) {
+                objectData[this.name] = [objectData[this.name]];
+            }
+
+            objectData[this.name].push(value);
+        } else {
+            objectData[this.name] = value;
+        }
+    });
+
+    return objectData;
+};
+
+var Cedulas = {}
 
 /* Calle Editor */
-var CalleEditor = function(config) {
+var CalleEditor = function (config) {
     this.createUrl = config["createUrl"];
+    this.editUrl = config["editUrl"];
+    this.calleNombre = config["nombre"];
+    this.esEditarNombre = false;
     this.prepararFormulario();
 }
 
 CalleEditor.prototype.prepararFormulario = function () {
-	$("#buttonGuardarCalle").click($.proxy(this.on_guardar_click, this));
-    $("#buttonNuevaCalle").click($.proxy(this.on_crear_click, this));
+	$("#buttonNuevaCalle").click($.proxy(this.on_crear_click, this));
+	$("#buttonNuevoNombre").click($.proxy(this.on_agregar_nombre_click, this));
+	$("#EditarNombre").click($.proxy(this.on_editar_nombre_click, this));
+    $("#buttonGuardarCalle").click($.proxy(this.on_editar_crear_guardar_click, this));
 }
 
 CalleEditor.prototype.on_crear_click = function () {
     $("#CalleModal").modal("show");
 }
 
-CalleEditor.prototype.on_guardar_click = function () {
+CalleEditor.prototype.on_agregar_nombre_click = function () {
+    $("#inputNombre").val("");
+    $("#CalleModal").modal("show");
+}
+
+CalleEditor.prototype.on_editar_nombre_click = function () {
+    this.esEditarNombre = true;
+    $("#inputNombre").val(this.calleNombre);
+    $("#CalleModal").modal("show");
+}
+
+CalleEditor.prototype.on_editar_guardar_click = function () {
     var data = $("#CalleForm").serialize();
+    this.esEditarNombre = false;
+    $("#CalleModal").modal("hide");
+}
+
+CalleEditor.prototype.on_editar_crear_guardar_click = function () {
+    var data = $("#CalleForm").serializeObject();
+    var url = (this.createUrl) ? this.createUrl : this.editUrl;
+    if (!this.esEditarNombre)
+        data["nombres"] = data["nombre"];
+    if (this.createUrl)
+        delete data["cId"];
+    console.log(data);
     var self = this;
     $.ajax({
-        url: this.createUrl,
+        url: url,
         type: "POST",
         data: data,
         dataType: 'json',
@@ -42,8 +98,8 @@ CalleEditor.prototype.on_guardar_click = function () {
 }
 
 
-/* Zona Editor */
-var ZonaEditor = function (config) {
+/* Altura Editor */
+var AlturaEditor = function (config) {
     this.jsonUrl = config["jsonUrl"];
     this.editUrl = config["editUrl"];
     this.deleteUrl = config["deleteUrl"];
@@ -53,14 +109,40 @@ var ZonaEditor = function (config) {
     this.prepararFormulario();
 }
 
-ZonaEditor.prototype.prepararFormulario = function () {
+AlturaEditor.prototype.prepararFormulario = function () {
 
-    $("#inputAlturas").change($.proxy(this.on_altura_changed, this));
     $("#buttonGuardarZona").click($.proxy(this.on_guardar_click, this));
+    $("#optionsAlturas").change($.proxy(this.on_altura_changed, this));
+    $("#optionsDomicilio").change($.proxy(this.on_domicilio_changed, this));
+    $("#optionsRango").change($.proxy(this.on_rango_changed, this));
 }
 
-ZonaEditor.prototype.on_altura_changed = function () {
-    var checked = $("#inputAlturas").is(':checked');
+AlturaEditor.prototype.on_domicilio_changed = function () {
+    var checked = $("#optionsDomicilio").is(':checked');
+    $("#inputDesde").attr("disabled", !checked);
+    $("#inputHasta").attr("disabled", checked);
+    $("#inputVereda").attr("disabled", checked);
+    if (checked) {
+        $("#inputHasta").val("");
+        $("#inputDesde").val("");
+        $("#inputVereda").val(3);
+    }
+}
+
+AlturaEditor.prototype.on_rango_changed = function () {
+    var checked = $("#optionsRango").is(':checked');
+    $("#inputDesde").attr("disabled", !checked);
+    $("#inputHasta").attr("disabled", !checked);
+    $("#inputVereda").attr("disabled", !checked);
+    if (checked) {
+        $("#inputHasta").val("");
+        $("#inputDesde").val("");
+        $("#inputVereda").val(3);
+    }
+}
+
+AlturaEditor.prototype.on_altura_changed = function () {
+    var checked = $("#optionsAlturas").is(':checked');
     $("#inputDesde").attr("disabled", checked);
     $("#inputHasta").attr("disabled", checked);
     $("#inputVereda").attr("disabled", checked);
@@ -71,13 +153,20 @@ ZonaEditor.prototype.on_altura_changed = function () {
     }
 }
 
-ZonaEditor.prototype.on_crear_click = function () {
+AlturaEditor.prototype.on_crear_click = function () {
     $("#inputZID").val("");
     $("#ZonaModal").modal("show");
 }
 
-ZonaEditor.prototype.on_guardar_click = function () {
-    var data = $("#ZonaForm").serialize();
+AlturaEditor.prototype.on_guardar_click = function () {
+    var data = $("#AlturaForm").serializeObject();
+    // jQuery no me serializa los input=radio
+    if ($("#optionsAlturas").is(':checked'))
+        data["optionsAltura"] = "alturas";
+    else if ($("#optionsRango").is(':checked'))
+        data["optionsAltura"] = "rango";
+    else if ($("#optionsDomicilio").is(':checked'))
+        data["optionsAltura"] = "domicilio";
     var self = this;
     $.ajax({
         url: this.editUrl,
@@ -102,46 +191,44 @@ ZonaEditor.prototype.on_guardar_click = function () {
     });
 }
 
-ZonaEditor.prototype.conectarAcciones = function () {
+AlturaEditor.prototype.conectarAcciones = function () {
     var self = this;
     $(".zona-edit").each(function (index, item) {
         $(item).click(function () {
-            var idZona = $(this).attr("zonaId");
-            self.editarZona(idZona);
+            var idAltura = $(this).attr("alturaId");
+            self.editarZona(idAltura);
         });
     });
     $(".zona-delete").each(function (index, item) {
         $(item).click(function () {
-            var idZona = $(this).attr("zonaId");
-            self.borrarZona(idZona);
+            var idAltura = $(this).attr("alturaId");
+            self.borrarZona(idAltura);
         });
     });
     $("#buttonNuevaZona").click($.proxy(this.on_crear_click, this));
 }
 
-ZonaEditor.prototype.editarZona = function (id) {
+AlturaEditor.prototype.editarZona = function (id) {
     var self = this;
     $.ajax({
         url: this.jsonUrl,
-        data: { zonaId: id },
+        data: { alturaId: id },
         dataType: 'json',
         success: function (data) {
-            var zonaForm = $("#ZonaForm");
+            var alturaForm = $("#AlturaForm");
             for (var i in data) {
-                zonaForm.find("[name=" + i + "]").val(data[i]);
+                alturaForm.find("[name=" + i + "]").val(data[i]);
             }
-            $("#inputAlturas").attr("checked", !data["alturas"]);
-            self.on_altura_changed();
             $("#ZonaModal").modal("show");
         }
     });
 }
 
-ZonaEditor.prototype.borrarZona = function (id) {
+AlturaEditor.prototype.borrarZona = function (id) {
     var self = this;
     $.post(
 		this.deleteUrl,
-		{ zonaId: id },
+		{ alturaId: id },
         function (response) {
             self.zonaTableRows.html($(response).fadeIn(500));
             self.conectarAcciones();
@@ -149,7 +236,7 @@ ZonaEditor.prototype.borrarZona = function (id) {
 	);
 }
 
-ZonaEditor.prototype.updateZonas = function () {
+AlturaEditor.prototype.updateZonas = function () {
     var self = this;
         $.get(
         this.dataUrl,

@@ -1,0 +1,18 @@
+﻿@model Admin.Models.EditCalleModel
+
+<table class="table table-bordered">
+	<thead>
+	<tr>
+		<th>Desde</th>
+		<th>Hasta</th>
+        <th>Vereda</th>
+        <th>Zona</th>
+        <th>&nbsp;</th>
+	</tr>
+	</thead>
+	<tbody>
+        @Html.Partial("AlturasTable", Model)
+	</tbody>
+</table>
+
+<button id="buttonNuevaZona" class="btn" @if (!Model.Segmentada && Model.Alturas.Count() != 0){ <text>disabled="disabled"</text> }>Nueva <i class="icon-plus-sign"></i></button>

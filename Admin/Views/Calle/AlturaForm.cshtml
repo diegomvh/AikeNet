@@ -1,15 +1,25 @@
 <div class="modal hide fade" id="ZonaModal" tabindex="-1" role="dialog" aria-labelledby="ZonaModalLabel" aria-hidden="true" >
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3 id="ZonaModalLabel">Editar Zona</h3>
+    <h3 id="ZonaModalLabel">Editar Altura</h3>
   </div>
   <div class="modal-body">
-    <form id="ZonaForm" class="form-horizontal">
-        <input id="inputZID" type="hidden" name="zId" />
+    <form id="AlturaForm" class="form-horizontal">
+        <input id="inputZID" type="hidden" name="aId" />
         <div class="control-group">
             <div class="controls">
-            <label class="checkbox">
-                <input id="inputAlturas" name="alturas" type="checkbox">Todas las alturas</label>
+                <label class="radio">
+				  <input type="radio" name="optionsAltura" id="optionsAlturas" value="alturas" />
+				  Todas las alturas
+				</label>
+	            <label class="radio">
+				  <input type="radio" name="optionsAltura" id="optionsDomicilio" value="domicilio" />
+				  Domicilio
+				</label>
+                <label class="radio">
+				  <input type="radio" name="optionsAltura" id="optionsRango" value="rango" />
+				  Rango de alturas
+				</label>
             </div>
         </div>
         <div class="control-group">

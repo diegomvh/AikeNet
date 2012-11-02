@@ -44,10 +44,7 @@ namespace Admin
             if (authCookie != null) {
                 var authTicket = System.Web.Security.FormsAuthentication.Decrypt(authCookie.Value);
                 if (authTicket != null) {
-                    var groups = authTicket.UserData.Split('|');
-                    var id = new System.Security.Principal.GenericIdentity(authTicket.Name, "LdapAuthentication");
-                    var principal = new System.Security.Principal.GenericPrincipal(id, groups);
-                    this.Context.User = principal;
+					this.Context.User = Admin.Security.User.UserFactory(authTicket.Name, authTicket.UserData);
                 }
             }
 

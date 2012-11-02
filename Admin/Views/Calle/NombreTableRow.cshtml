@@ -1,0 +1,11 @@
+﻿@model CoreSQL.Entities.Calle
+
+@foreach (string nombre in Model.OtrosNombres())
+    {
+<tr>
+	<td>@nombre</td>
+  	<td>
+        <a class="nombre-delete" calleNombre="@nombre"><i class="icon-minus-sign"></i></a>
+    </td>
+</tr>
+}

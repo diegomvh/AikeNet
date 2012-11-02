@@ -39,22 +39,30 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
+    <ProjectReference Include="..\CoreSQL\CoreSQL.csproj">
+      <Project>{3FFCFCF5-287D-4939-97CA-F5BBD8FD811C}</Project>
+      <Name>CoreSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\CoreMongo.csproj">
       <Project>{5CA25843-9587-42F9-BA91-E00B64DFAFE7}</Project>
-      <Name>Core</Name>
+      <Name>CoreMongo</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

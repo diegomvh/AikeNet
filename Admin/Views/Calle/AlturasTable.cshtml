@@ -1,0 +1,81 @@
+﻿@model Admin.Models.EditCalleModel
+
+
+@if (Model.Segmentada)
+{
+    foreach (CoreSQL.Entities.Altura altura in Model.Alturas)
+    {
+if (altura.desde != 0 && altura.desde == altura.hasta)
+    {
+        <tr>
+        <td>@altura.desde</td>
+        <td colspan="2">Domicilio</td>
+        <td><span class="badge badge-success">@altura.zona</span></td>
+        <td>
+            <a class="zona-edit" alturaId="@altura.id"><i class="icon-edit"></i></a>
+            <a class="zona-delete" alturaId="@altura.id"><i class="icon-minus-sign"></i></a>
+        </td>
+        </tr>
+    }
+    else if (altura.desde == 0 ) 
+    {
+        <tr>
+        <td colspan="3">Todas las alturas</td>
+        <td><span class="badge badge-inverse">@altura.zona</span></td>
+        <td>
+            <a class="zona-edit" alturaId="@altura.id"><i class="icon-edit"></i></a>
+            <a class="zona-delete" alturaId="@altura.id"><i class="icon-minus-sign"></i></a>
+        </td>
+        </tr>
+    } 
+    else 
+    {
+    <tr>
+   	<td>@altura.desde</td>
+  	<td>@altura.hasta</td>
+  	@{	switch (altura.vereda)
+        {
+            case 1:
+	  			<text>
+	  			<td>Par</td>
+	  			<td><span class="badge badge-success">@altura.zona</span></td>
+	  			</text>
+                                       break;
+            case 2:
+	  			<text>
+	  			<td>Impar</td>
+	  			<td><span class="badge badge-info">@altura.zona</span></td>
+	  			</text>
+                                    break;
+            case 3:
+	  			<text>
+	  			<td>Ambas</td>
+	  			<td><span class="badge badge-inverse">@altura.zona</span></td>
+	  			</text>
+                                       break;
+        }
+  	}
+    <td>
+        <a class="zona-edit" alturaId="@altura.id"><i class="icon-edit"></i></a>
+        <a class="zona-delete" alturaId="@altura.id"><i class="icon-minus-sign"></i></a>
+    </td>
+    </tr>
+}
+}
+}
+else if (@Model.Alturas.Count() == 1)
+{
+<tr>
+	<td colspan="3">Todas las alturas</td>
+  	<td><span class="badge badge-important">@Model.Alturas.First().zona</span></td>
+    <td>
+        <a class="zona-edit" alturaId="@Model.Alturas.First().id"><i class="icon-edit"></i></a>
+    </td>
+</tr>
+}
+else
+{
+<tr>
+	<td colspan="5">No hay alturas cargadas</td>
+</tr>
+}

@@ -13,7 +13,7 @@
     <RootNamespace>Admin</RootNamespace>
     <AssemblyName>Admin</AssemblyName>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -60,6 +60,9 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
@@ -70,10 +73,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\CalleModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\FormsAuthentication.cs" />
     <Compile Include="Tools\Paginator.cs" />
-    <Compile Include="Tools\UserRepository.cs" />
+    <Compile Include="Security\User.cs" />
+    <Compile Include="Security\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\bootstrap-responsive.min.css" />
@@ -87,16 +92,6 @@
     <Content Include="Content\js\jquery-1.8.1.min.js" />
     <Content Include="Content\js\modernizr-1.7.min.js" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.5.1.js" />
-    <Content Include="Scripts\jquery-1.5.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.11.js" />
-    <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\modernizr-1.7.js" />
-    <Content Include="Scripts\modernizr-1.7.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -106,16 +101,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\MicrosoftAjax.js" />
-    <Content Include="Scripts\MicrosoftAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -124,6 +109,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\AikeAdmin.pubxml" />
     <None Include="readme.txt" />
     <Content Include="Views\Shared\_navbar.cshtml" />
     <Content Include="Views\Calle\DisplayTemplates\CalleTableRow.cshtml" />
@@ -131,21 +117,23 @@
     <Content Include="Views\Shared\_paginator.cshtml" />
     <Content Include="Views\Calle\Edit.cshtml" />
     <Content Include="Views\Zona\DisplayTemplates\ZonaTableRow.cshtml" />
-    <Content Include="Views\Calle\ZonaTableRow.cshtml" />
-    <Content Include="Views\Calle\CalleZonas.cshtml" />
+    <Content Include="Views\Calle\AlturasTable.cshtml" />
+    <Content Include="Views\Calle\CalleAlturas.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <None Include="Views\Calle\CalleForm.cshtml" />
-    <None Include="Views\Calle\ZonaForm.cshtml" />
+    <None Include="Views\Calle\AlturaForm.cshtml" />
+    <Content Include="Views\Calle\CalleNombres.cshtml" />
+    <Content Include="Views\Calle\NombreTableRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{5CA25843-9587-42F9-BA91-E00B64DFAFE7}</Project>
-      <Name>Core</Name>
+    <ProjectReference Include="..\CoreSQL\CoreSQL.csproj">
+      <Project>{3FFCFCF5-287D-4939-97CA-F5BBD8FD811C}</Project>
+      <Name>CoreSQL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -164,12 +152,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1037</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost:1037/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -180,7 +167,7 @@
     </VisualStudio>
     <MonoDevelop>
       <Properties VerifyCodeBehindFields="True" VerifyCodeBehindEvents="True">
-        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+        <XspParameters Port="8080" Address="0.0.0.0" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
